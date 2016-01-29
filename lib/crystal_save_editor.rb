@@ -1,5 +1,5 @@
 require "crystal_save_editor/version"
+require "crystal_save_editor/reader"
 
 module CrystalSaveEditor
-  # Your code goes here...
 end
