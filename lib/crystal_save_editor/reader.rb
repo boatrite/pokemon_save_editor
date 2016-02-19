@@ -1,5 +1,6 @@
 module CrystalSaveEditor
   class Reader
+    GENDER = [0x3E3D, 1]
     attr_reader :sav, :sav_filename
 
     def initialize(sav_filename)
@@ -8,7 +9,6 @@ module CrystalSaveEditor
     end
 
     def read
-      require 'pry'; binding.pry
     end
   end
 end
