@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# encoding: ASCII-8BIT
 
 require "bundler/setup"
 require "crystal_save_editor"
@@ -6,6 +7,60 @@ require "crystal_save_editor"
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
+GENDER = [1, 0x3e3d]
+PLAYER_NAME = [11, 0x200b]
+CHECKSUM1 = [2, 0x2d0d]
+CHECKSUM2 = [2, 0x1f0d]
+
+$sav_filename = 'spec/fixtures/Crystal.sav'
+
+# Must force_encoding unless second line of file is '# encoding: ASCII-8BIT'.
+# See http://ruby-doc.org/core-2.3.0/Encoding.html
+# Unfortunately, pry does not use encoding specified with magic comment.
+def gsub_byte_string(target, pattern, replacement)
+  target.gsub(pattern.force_encoding(Encoding::ASCII_8BIT), replacement.force_encoding(Encoding::ASCII_8BIT))
+end
+
+def checksum_1
+  File.binread $sav_filename, *CHECKSUM1
+end
+
+def checksum_2
+  File.binread $sav_filename, *CHECKSUM2
+end
+
+def calculate_checksum_1
+  start_1 = 0x2009
+  end_1 = 0x2b82
+  len_1 = end_1 - start_1
+  byte_string = File.read $sav_filename, len_1, start_1
+  calculate_checksum byte_string
+end
+
+def calculate_checksum_2
+  start_2 = 0x1209
+  end_2 = 0x1d82
+  len_2 = end_2 - start_2
+  byte_string = File.read $sav_filename, len_2, start_2
+  calculate_checksum byte_string
+end
+
+def calculate_checksum(byte_string)
+  sum = byte_string.bytes.reduce(:+)
+  [sum].pack('s')
+end
+
+# This is sufficient for the game to use the modified data.
+def write_checksum_1
+  File.binwrite $sav_filename, calculate_checksum_1, CHECKSUM1.last
+end
+
+player_name = File.binread($sav_filename, *PLAYER_NAME)
+new_player_name = gsub_byte_string(player_name, "\x99", "\x98")
+File.binwrite $sav_filename, new_player_name, PLAYER_NAME.last
+
+require 'pry'; binding.pry
+
 # (If you use this, don't forget to add pry to your Gemfile!)
-require "pry"
-Pry.start
+#require "pry"
+#Pry.start
