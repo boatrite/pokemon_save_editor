@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "pse"
+
+# You can add fixtures and/or initialization code here to make experimenting
+# with your gem easier. You can also use a different console, if you like.
+
+# Not currently used. Not sure if this will be needed at any point, so keep it around for now.
+#module Helpers
+  # Must force_encoding unless second line of file is '# encoding: ASCII-8BIT'.
+  # See http://ruby-doc.org/core-2.3.0/Encoding.html
+  # Unfortunately, pry does not use encoding specified with magic comment.
+  #def gsub_byte_string(target, pattern, replacement)
+    #target.gsub(pattern.force_encoding(Encoding::ASCII_8BIT), replacement.force_encoding(Encoding::ASCII_8BIT))
+  #end
+#end
+
+path = 'spec/fixtures/Crystal.sav'
+save = PSE::Save.new path
+
+require 'pry'; binding.pry
+
+# (If you use this, don't forget to add pry to your Gemfile!)
+#require "pry"
+#Pry.start
