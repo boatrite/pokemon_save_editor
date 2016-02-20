@@ -1,16 +1,15 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'crystal_save_editor/version'
+require 'pse/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "crystal_save_editor"
-  spec.version       = CrystalSaveEditor::VERSION
+  spec.name          = "pse"
+  spec.version       = PSE::VERSION
   spec.authors       = ["Gwen Boatrite"]
   spec.email         = ["zach@tenforwardconsulting.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = %q{Pokemon Save Editor}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
@@ -30,8 +29,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "awesome_print"
   spec.add_development_dependency "bundler", "~> 1.11"
   spec.add_development_dependency "pry"
+  spec.add_development_dependency "pry-editline"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
 
   spec.add_dependency "thor"
+  spec.add_dependency "require_all"
 end
