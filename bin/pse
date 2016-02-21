@@ -6,7 +6,11 @@ require "pse"
 # You can add fixtures and/or initialization code here to make experimenting
 # with your gem easier. You can also use a different console, if you like.
 
-path = 'spec/fixtures/Crystal.sav'
-save = PSE::Save.new path
+save = PSE::Save.new 'spec/fixtures/Crystal.sav'
+
+# In general, calling methods on `silver` won't give useful information as most of the offsets are different.
+# Not all though, and having an initialization of Save with Silver.sav still lets us call `test` to drop into a pry
+# and poke around.
+#silver = PSE::Save.new 'rom/silver/Silver.sav'
 
 require 'pry'; binding.pry
