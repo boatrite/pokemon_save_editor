@@ -35,9 +35,8 @@ RSpec.describe Save do
     end
 
     it 'updates the checksum' do
-      expect {
-        save.player_name = 'Rory'
-      }.to change { save.current_checksum }
+      expect(save).to receive :update_checksum
+      save.player_name = 'Rory'
     end
 
     it 'raises an error if the name is blank' do
@@ -59,6 +58,47 @@ RSpec.describe Save do
       expect {
         save.player_name = 'ジ'
       }.to raise_error 'Invalid name. Invalid character: ジ'
+    end
+  end
+
+  describe '#rival_name' do
+    it "returns the rival's name" do
+      expect(save.rival_name).to eq 'Silver'
+    end
+  end
+
+  describe '#rival_name=' do
+    it "todo write me" do
+      skip 'Write me'
+      save.rival_name = 'Write me'
+    end
+  end
+
+  describe '#money' do
+    it 'returns the amount of money the player has' do
+      expect(save.money).to eq 3300
+    end
+  end
+
+  describe '#money=' do
+    it 'sets the amount of money the player has' do
+      expect {
+        save.money = 999999
+      }.to change { save.money }.from(3300).to 999999
+    end
+
+    it 'updates the checksum' do
+      expect(save).to receive :update_checksum
+      save.money = 999999
+    end
+
+    it 'raises an error if the given number is not between 0 and 999,999' do
+      expect {
+        save.money = -1
+      }.to raise_error ArgumentError, "Money must be between 0 and 999,999"
+      expect {
+        save.money = 1000000
+      }.to raise_error ArgumentError, "Money must be between 0 and 999,999"
     end
   end
 
