@@ -1,9 +1,11 @@
 RSpec.configure do |config|
+  # Make sure all of our tests use the same sav file.
   config.before :each do
-    FileUtils.cp 'rom/Crystal.sav', 'spec/fixtures/Crystal.sav'
+    FileUtils.cp 'spec/fixtures/Crystal.original.sav', 'spec/fixtures/Crystal.sav'
   end
 
-  config.after :each do
-    FileUtils.rm 'spec/fixtures/Crystal.sav'
+  # When all tests are done, reset the sav file to the original.
+  config.after :all do
+    FileUtils.cp 'spec/fixtures/Crystal.original.sav', 'spec/fixtures/Crystal.sav'
   end
 end
