@@ -1,6 +1,5 @@
 module PSE
-  CHARS = {
-    "@" => 0x50,
+  CHARS_TO_HEX = {
     "#" => 0x54,
     "№" => 0x74,
     "…" => 0x75,
@@ -111,4 +110,6 @@ module PSE
     "8" => 0xFE,
     "9" => 0xFF
   }
+
+  HEX_TO_CHARS = CHARS_TO_HEX.invert
 end
