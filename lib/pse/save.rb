@@ -9,6 +9,18 @@ class PSE::Save
   end
   GENDERS = Gender.constants.map &Gender.method(:const_get)
 
+  module Palette
+    RED = "\x00"
+    BLUE = "\x01"
+    GREEN = "\x02"
+    BROWN = "\x03"
+    ORANGE = "\x04"
+    GRAY = "\x05"
+    DARK_GREEN = "\x06"
+    DARK_RED = "\x07"
+  end
+  PALETTES = Palette.constants.map &Palette.method(:const_get)
+
   def initialize(path)
     @path = path
   end
@@ -29,17 +41,6 @@ class PSE::Save
     byte_string = [first_byte, second_byte].pack 'c*'
     write byte_string, PSE::Datum::TRAINER_ID.offset
     update_checksum
-  end
-
-  def gender
-    read PSE::Datum::GENDER.length, PSE::Datum::GENDER.offset
-  end
-
-  def gender=(new_gender)
-    unless GENDERS.include? new_gender
-      raise ArgumentError.new "Invalid gender. Given #{new_gender.to_hex_s} but must be one of #{GENDERS.map { |g| g.to_hex_s }}"
-    end
-    write new_gender, PSE::Datum::GENDER.offset
   end
 
   def player_name
@@ -89,6 +90,29 @@ class PSE::Save
     # Each array element is a signed 8-bit, so we use 'c' to pack them.
     byte_string = bytes.pack('c*')
     write byte_string, PSE::Datum::RIVAL_NAME.offset
+    update_checksum
+  end
+
+  def gender
+    read PSE::Datum::GENDER.length, PSE::Datum::GENDER.offset
+  end
+
+  def gender=(new_gender)
+    unless GENDERS.include? new_gender
+      raise ArgumentError.new "Invalid gender. Given #{new_gender.to_hex_s} but must be one of #{GENDERS.map { |g| g.to_hex_s }}"
+    end
+    write new_gender, PSE::Datum::GENDER.offset
+  end
+
+  def palette
+    read PSE::Datum::PALETTE.length, PSE::Datum::PALETTE.offset
+  end
+
+  def palette=(new_palette)
+    unless PALETTES.include? new_palette
+      raise ArgumentError.new "Invalid palette. Given #{new_palette.to_hex_s} but must be one of #{PALETTES.map { |p| p.to_hex_s }}"
+    end
+    write new_palette, PSE::Datum::PALETTE.offset
     update_checksum
   end
 
