@@ -8,6 +8,13 @@ require "pse"
 
 save = PSE::Save.new 'spec/fixtures/Crystal.sav'
 
+new_items = {
+  'Full Restore' => 99, 'Rare Candy' => 99, 'Sacred Ash' => 99, 'Max Revive' => 99,
+  'Gold Berry' => 99, 'Max Repel' => 99, 'Escape Rope' => 99,'Nugget' => 99,
+  'PP Up' => 99, 'HP Up' => 99, 'Protein' => 99, 'Iron' => 99, 'Carbos' => 99, 'Calcium' => 99,
+  'Moon Stone' => 99, 'Fire Stone' => 99, 'Thunder Stone' => 99, 'Water Stone' => 99, 'Leaf Stone' => 99, 'Sun Stone' => 99
+}
+
 # In general, calling methods on `silver` won't give useful information as most of the offsets are different.
 # Not all though, and having an initialization of Save with Silver.sav still lets us call `test` to drop into a pry
 # and poke around.

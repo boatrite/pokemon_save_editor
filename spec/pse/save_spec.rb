@@ -231,6 +231,58 @@ RSpec.describe Save do
     end
   end
 
+  describe '#items' do
+    it 'returns the current items' do
+      expect(save.items).to eq({
+        'Potion' => 2,
+        'Berry' => 3,
+        'Antidote' => 1
+      })
+    end
+  end
+
+  describe '#items=' do
+    let(:new_items) {{
+      'Full Restore' => 99, 'Rare Candy' => 99, 'Sacred Ash' => 99, 'Max Revive' => 99,
+      'Gold Berry' => 99, 'Max Repel' => 99, 'Escape Rope' => 99,'Nugget' => 99,
+      'PP Up' => 99, 'HP Up' => 99, 'Protein' => 99, 'Iron' => 99, 'Carbos' => 99, 'Calcium' => 99,
+      'Moon Stone' => 99, 'Fire Stone' => 99, 'Thunder Stone' => 99, 'Water Stone' => 99, 'Leaf Stone' => 99, 'Sun Stone' => 99
+    }}
+
+    it 'sets the items the player has' do
+      expect {
+        save.items = new_items
+      }.to change { save.items }.to new_items
+    end
+
+    it 'updates the checksum' do
+      expect(save).to receive :update_checksum
+      save.items = new_items
+    end
+
+    it "raises an error if a given item can't be found" do
+      new_items.delete 'Full Restore'
+      expect {
+        save.items = new_items.merge 'Foobar' => 99
+      }.to raise_error ArgumentError, "Item doesn't exist: Foobar"
+    end
+
+    it "raises an error if the count isn't between 0 and 99" do
+      expect {
+        save.items = new_items.merge 'Full Restore' => 100
+      }.to raise_error ArgumentError, "Item count for Full Restore must be between 1 and 99"
+      expect {
+        save.items = new_items.merge 'Full Restore' => 0
+      }.to raise_error ArgumentError, "Item count for Full Restore must be between 1 and 99"
+    end
+
+    it 'raises an error if more than 20 items are given' do
+      expect {
+        save.items = new_items.merge 'Max Elixer' => 99
+      }.to raise_error ArgumentError, "Cannot have more than 20 items"
+    end
+  end
+
   describe '#current_checksum' do
     it 'returns the currently saved checksum for the primary copy of data' do
       expect(save.current_checksum).to eq "\x96\xFA".force_encoding(Encoding::ASCII_8BIT)
