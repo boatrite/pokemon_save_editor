@@ -137,7 +137,7 @@ class PSE::Save
   end
 
   def tms
-    byte_string = read PSE::Datum::TM_POCKET.length, PSE::Datum::TM_POCKET.offset
+    byte_string = read PSE::Datum::POCKET_TMS.length, PSE::Datum::POCKET_TMS.offset
     byte_string.bytes.each_with_object({}).with_index do |(count, tms), index|
       tms["TM #{(index + 1).to_s.rjust(2, '0')}"] = count
     end
@@ -145,21 +145,57 @@ class PSE::Save
 
   def max_tms
     # 0x63 = 99
-    new_byte_string = (["\x63"] * PSE::Datum::TM_POCKET.length).join
-    write new_byte_string, PSE::Datum::TM_POCKET.offset
+    new_byte_string = (["\x63"] * PSE::Datum::POCKET_TMS.length).join
+    write new_byte_string, PSE::Datum::POCKET_TMS.offset
     update_checksum
   end
 
   def hms
-    byte_string = read PSE::Datum::HM_POCKET.length, PSE::Datum::HM_POCKET.offset
+    byte_string = read PSE::Datum::POCKET_HMS.length, PSE::Datum::POCKET_HMS.offset
     byte_string.bytes.each_with_object({}).with_index do |(count, hms), index|
       hms["HM #{(index + 1).to_s.rjust(2, '0')}"] = count
     end
   end
 
   def max_hms
-    new_byte_string = (["\x01"] * PSE::Datum::HM_POCKET.length).join
-    write new_byte_string, PSE::Datum::HM_POCKET.offset
+    new_byte_string = (["\x01"] * PSE::Datum::POCKET_HMS.length).join
+    write new_byte_string, PSE::Datum::POCKET_HMS.offset
+    update_checksum
+  end
+
+  def items
+    byte_string = read PSE::Datum::POCKET_ITEMS.length, PSE::Datum::POCKET_ITEMS.offset
+    bytes = byte_string.bytes
+    count = bytes.shift
+    bytes = bytes.reject { |b| b == 0xFF || b == 0x00 }
+    if bytes.length % 2 != 0
+      raise "Have an odd number of entries in item bytes array.\nI don't think this should happen.\nbyte_string: #{byte_string}\nbytes: #{bytes}"
+    end
+    bytes.each_slice(2).each_with_object({}) do |(item, count), items|
+      item_name = PSE::HEX_TO_ITEMS.fetch item
+      items[item_name] = count
+    end
+  end
+
+  def items=(new_items)
+    count = new_items.count
+    if count > 20
+      raise ArgumentError.new "Cannot have more than 20 items"
+    end
+    new_bytes = [count]
+    new_bytes += new_items.each_with_object([]) do |(item_name, item_count), new_entry_bytes|
+      if item_count < 1 || item_count > 99
+        raise ArgumentError.new "Item count for #{item_name} must be between 1 and 99"
+      end
+      if (item = PSE::ITEMS_TO_HEX[item_name]).nil?
+        raise ArgumentError.new "Item doesn't exist: #{item_name}"
+      end
+      new_entry_bytes << item
+      new_entry_bytes << item_count
+    end
+    new_bytes << 0xFF
+    new_byte_string = new_bytes.pack('c*')
+    write new_byte_string, PSE::Datum::POCKET_ITEMS.offset
     update_checksum
   end
 

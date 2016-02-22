@@ -6,8 +6,9 @@ module PSE::Datum
   MONEY = Offset.new 3, 0x23DC
   PALETTE = Offset.new 1, 0x206A
   PLAYER_NAME = Offset.new 11, 0x200B
+  POCKET_HMS = Offset.new 7, 0x2419
+  POCKET_ITEMS = Offset.new 42, 0x2420
+  POCKET_TMS = Offset.new 50, 0x23E7
   RIVAL_NAME = Offset.new 11, 0x2021
   TRAINER_ID = Offset.new 2, 0x2009
-  TM_POCKET = Offset.new 50, 0x23E7
-  HM_POCKET = Offset.new 7, 0x2419
 end
