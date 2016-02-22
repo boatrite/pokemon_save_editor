@@ -35,24 +35,13 @@ class PSE::Save
   end
 
   def player_name=(new_player_name)
-    if new_player_name.strip.empty?
-      raise ArgumentError.new "Invalid name. Cannot be blank"
-    end
-    if new_player_name.length > 7
-      raise ArgumentError.new "Invalid name. Cannot be longer than 7 characters"
-    end
-    bytes = new_player_name.chars.map { |char|
-      unless PSE::CHARS_TO_HEX.include? char
-        raise ArgumentError.new "Invalid name. Invalid character: #{char}"
-      end
-      PSE::CHARS_TO_HEX.fetch char
-    }
+    validate_name new_player_name
+    bytes = new_player_name.chars.map { |char| PSE::CHARS_TO_HEX.fetch char }
     # Crystal reserves 11 bytes for the name, but only 7 of these are usable.
     # The first 8 bytes contain the name with any leftover equal to 0x50.
     # Since the name can be 7 bytes at most, there will be at least one 0x50 of padding.
     # The remaining 3 bytes are equal to 0x00.
-    zero_padding_length = 3
-    padding = [0x50] * (PSE::Datum::PLAYER_NAME.length - zero_padding_length - bytes.length) + [0x00] * zero_padding_length
+    padding = [0x50] * (PSE::Datum::PLAYER_NAME.length - 3 - bytes.length) + [0x00, 0x00, 0x00]
     bytes += padding
     # Each array element is a signed 8-bit, so we use 'c' to pack them.
     byte_string = bytes.pack('c*')
@@ -68,6 +57,21 @@ class PSE::Save
       .reject { |byte| name_padding_bytes.include? byte }
       .map { |byte| PSE::HEX_TO_CHARS.fetch byte }
       .join
+  end
+
+  def rival_name=(new_rival_name)
+    validate_name new_rival_name
+    bytes = new_rival_name.chars.map { |char| PSE::CHARS_TO_HEX.fetch char }
+    # Crystal reserves 11 bytes for the name, but only 7 of these are usable.
+    # The first 8 bytes contain the name with any leftover equal to 0x50.
+    # Since the name can be 7 bytes at most, there will be at least one 0x50 of padding.
+    # The remaining 3 bytes are equal to 0x86, 0x91, 0x84 respectively.
+    padding = [0x50] * (PSE::Datum::RIVAL_NAME.length - 3 - bytes.length) + [0x86, 0x91, 0x84]
+    bytes += padding
+    # Each array element is a signed 8-bit, so we use 'c' to pack them.
+    byte_string = bytes.pack('c*')
+    write byte_string, PSE::Datum::RIVAL_NAME.offset
+    update_checksum
   end
 
   def money
@@ -120,5 +124,19 @@ class PSE::Save
 
   def write(byte_string, offset)
     IO.binwrite path, byte_string, offset
+  end
+
+  def validate_name(name)
+    if name.strip.empty?
+      raise ArgumentError.new "Invalid name. Cannot be blank"
+    end
+    if name.length > 7
+      raise ArgumentError.new "Invalid name. Cannot be longer than 7 characters"
+    end
+    name.chars.each { |char|
+      unless PSE::CHARS_TO_HEX.include? char
+        raise ArgumentError.new "Invalid name. Invalid character: #{char}"
+      end
+    }
   end
 end
