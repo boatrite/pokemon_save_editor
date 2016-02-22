@@ -6,4 +6,5 @@ module PSE::Datum
   MONEY = Offset.new 3, 0x23dc
   PLAYER_NAME = Offset.new 11, 0x200b
   RIVAL_NAME = Offset.new 11, 0x2021
+  TRAINER_ID = Offset.new 2, 0x2009
 end

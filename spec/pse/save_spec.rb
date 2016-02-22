@@ -1,6 +1,29 @@
 RSpec.describe Save do
   let(:save) { Save.new 'spec/fixtures/Crystal.sav' }
 
+  describe '#trainer_id' do
+    it "returns the player's trainer ID" do
+      expect(save.trainer_id).to eq 36426
+    end
+  end
+
+  describe '#trainer_id=' do
+    it "sets the player's trainer ID" do
+      expect {
+        save.trainer_id = 12345
+      }.to change { save.trainer_id }.from(36426).to 12345
+    end
+
+    it 'raises an error if the given ID is not between 00000 and 65535' do
+      expect {
+        save.trainer_id = -1
+      }.to raise_error ArgumentError, 'Trainer ID must be between 00000 and 65535'
+      expect {
+        save.trainer_id = 655536
+      }.to raise_error ArgumentError, 'Trainer ID must be between 00000 and 65535'
+    end
+  end
+
   describe '#gender' do
     it "returns the player's gender" do
       expect(save.gender).to eq "\x01"

@@ -13,15 +13,33 @@ class PSE::Save
     @path = path
   end
 
+  def trainer_id
+    byte_string = read PSE::Datum::TRAINER_ID.length, PSE::Datum::TRAINER_ID.offset
+    bytes = byte_string.bytes
+    # The first byte is the number of multiples of 2^8 (256)
+    # The second byte is the number of multiples of 2^0 (1)
+    [bytes[0] * 2**8, bytes[1]].reduce(:+)
+  end
+
+  def trainer_id=(new_trainer_id)
+    if new_trainer_id < 0 || new_trainer_id > 2**16-1
+      raise ArgumentError.new "Trainer ID must be between 00000 and 65535"
+    end
+    first_byte, second_byte = new_trainer_id.divmod 2**8
+    byte_string = [first_byte, second_byte].pack 'c*'
+    write byte_string, PSE::Datum::TRAINER_ID.offset
+    update_checksum
+  end
+
   def gender
     read PSE::Datum::GENDER.length, PSE::Datum::GENDER.offset
   end
 
-  def gender=(gender)
-    unless GENDERS.include? gender
-      raise ArgumentError.new "Invalid gender. Given #{gender.to_hex_s} but must be one of #{GENDERS.map { |g| g.to_hex_s }}"
+  def gender=(new_gender)
+    unless GENDERS.include? new_gender
+      raise ArgumentError.new "Invalid gender. Given #{new_gender.to_hex_s} but must be one of #{GENDERS.map { |g| g.to_hex_s }}"
     end
-    write gender, PSE::Datum::GENDER.offset
+    write new_gender, PSE::Datum::GENDER.offset
   end
 
   def player_name
