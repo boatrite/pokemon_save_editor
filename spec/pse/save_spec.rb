@@ -24,26 +24,6 @@ RSpec.describe Save do
     end
   end
 
-  describe '#gender' do
-    it "returns the player's gender" do
-      expect(save.gender).to eq "\x01"
-    end
-  end
-
-  describe '#gender=' do
-    it "sets the player's gender" do
-      expect {
-        save.gender = Save::Gender::BOY
-      }.to change { save.gender }.from("\x01").to "\x00"
-    end
-
-    it 'raises an error if an invalid byte is given' do
-      expect {
-        save.gender = "\x42"
-      }.to raise_error ArgumentError, 'Invalid gender. Given 0x42 but must be one of ["0x00", "0x01"]'
-    end
-  end
-
   describe '#player_name' do
     it "returns the player's name" do
       expect(save.player_name).to eq 'Amelia'
@@ -121,6 +101,51 @@ RSpec.describe Save do
       expect {
         save.rival_name = 'ジ'
       }.to raise_error 'Invalid name. Invalid character: ジ'
+    end
+  end
+
+  describe '#gender' do
+    it "returns the player's gender" do
+      expect(save.gender).to eq "\x01"
+    end
+  end
+
+  describe '#gender=' do
+    it "sets the player's gender" do
+      expect {
+        save.gender = Save::Gender::BOY
+      }.to change { save.gender }.from("\x01").to "\x00"
+    end
+
+    it 'raises an error if an invalid byte is given' do
+      expect {
+        save.gender = "\x42"
+      }.to raise_error ArgumentError, 'Invalid gender. Given 0x42 but must be one of ["0x00", "0x01"]'
+    end
+  end
+
+  describe '#palette' do
+    it 'returns the palette' do
+      expect(save.palette).to eq Save::Palette::BLUE
+    end
+  end
+
+  describe '#palette=' do
+    it "sets the player's palette" do
+      expect {
+        save.palette = Save::Palette::RED
+      }.to change { save.palette }.from("\x01").to "\x00"
+    end
+
+    it 'updates the checksum' do
+      expect(save).to receive :update_checksum
+      save.palette = Save::Palette::RED
+    end
+
+    it 'raises an error if an invalid byte is given' do
+      expect {
+        save.palette = "\x42"
+      }.to raise_error ArgumentError, 'Invalid palette. Given 0x42 but must be one of ["0x00", "0x01", "0x02", "0x03", "0x04", "0x05", "0x06", "0x07"]'
     end
   end
 
