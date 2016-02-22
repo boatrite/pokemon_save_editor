@@ -177,6 +177,60 @@ RSpec.describe Save do
     end
   end
 
+  describe '#tms' do
+    it 'returns the current TMs' do
+      expect(save.tms).to eq({
+        "TM 01" => 0, "TM 02" => 0, "TM 03" => 0, "TM 04" => 0, "TM 05" => 0, "TM 06" => 0, "TM 07" => 0, "TM 08" => 0, "TM 09" => 0, "TM 10" => 0,
+        "TM 11" => 0, "TM 12" => 0, "TM 13" => 0, "TM 14" => 0, "TM 15" => 0, "TM 16" => 0, "TM 17" => 0, "TM 18" => 0, "TM 19" => 0, "TM 20" => 0,
+        "TM 21" => 0, "TM 22" => 0, "TM 23" => 0, "TM 24" => 0, "TM 25" => 0, "TM 26" => 0, "TM 27" => 0, "TM 28" => 0, "TM 29" => 0, "TM 30" => 0,
+        "TM 31" => 0, "TM 32" => 0, "TM 33" => 0, "TM 34" => 0, "TM 35" => 0, "TM 36" => 0, "TM 37" => 0, "TM 38" => 0, "TM 39" => 0, "TM 40" => 0,
+        "TM 41" => 0, "TM 42" => 0, "TM 43" => 0, "TM 44" => 0, "TM 45" => 0, "TM 46" => 0, "TM 47" => 0, "TM 48" => 0, "TM 49" => 0, "TM 50" => 0
+      })
+    end
+  end
+
+  describe '#max_tms' do
+    it 'maxes the TM counts' do
+      expect {
+        save.max_tms
+      }.to change { save.tms }.to({
+        "TM 01" => 99, "TM 02" => 99, "TM 03" => 99, "TM 04" => 99, "TM 05" => 99, "TM 06" => 99, "TM 07" => 99, "TM 08" => 99, "TM 09" => 99, "TM 10" => 99,
+        "TM 11" => 99, "TM 12" => 99, "TM 13" => 99, "TM 14" => 99, "TM 15" => 99, "TM 16" => 99, "TM 17" => 99, "TM 18" => 99, "TM 19" => 99, "TM 20" => 99,
+        "TM 21" => 99, "TM 22" => 99, "TM 23" => 99, "TM 24" => 99, "TM 25" => 99, "TM 26" => 99, "TM 27" => 99, "TM 28" => 99, "TM 29" => 99, "TM 30" => 99,
+        "TM 31" => 99, "TM 32" => 99, "TM 33" => 99, "TM 34" => 99, "TM 35" => 99, "TM 36" => 99, "TM 37" => 99, "TM 38" => 99, "TM 39" => 99, "TM 40" => 99,
+        "TM 41" => 99, "TM 42" => 99, "TM 43" => 99, "TM 44" => 99, "TM 45" => 99, "TM 46" => 99, "TM 47" => 99, "TM 48" => 99, "TM 49" => 99, "TM 50" => 99
+      })
+    end
+
+    it 'updates the checksum' do
+      expect(save).to receive :update_checksum
+      save.max_tms
+    end
+  end
+
+  describe '#hms' do
+    it 'returns the current HMs' do
+      expect(save.hms).to eq({
+        "HM 01" => 0, "HM 02" => 0, "HM 03" => 0, "HM 04" => 0, "HM 05" => 0, "HM 06" => 0, "HM 07" => 0
+      })
+    end
+  end
+
+  describe '#max_hms' do
+    it 'maxes the HM counts' do
+      expect {
+        save.max_hms
+      }.to change { save.hms }.to({
+        "HM 01" => 1, "HM 02" => 1, "HM 03" => 1, "HM 04" => 1, "HM 05" => 1, "HM 06" => 1, "HM 07" => 1
+      })
+    end
+
+    it 'updates the checksum' do
+      expect(save).to receive :update_checksum
+      save.max_tms
+    end
+  end
+
   describe '#current_checksum' do
     it 'returns the currently saved checksum for the primary copy of data' do
       expect(save.current_checksum).to eq "\x96\xFA".force_encoding(Encoding::ASCII_8BIT)

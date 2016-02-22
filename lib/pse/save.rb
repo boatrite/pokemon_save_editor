@@ -136,6 +136,33 @@ class PSE::Save
     update_checksum
   end
 
+  def tms
+    byte_string = read PSE::Datum::TM_POCKET.length, PSE::Datum::TM_POCKET.offset
+    byte_string.bytes.each_with_object({}).with_index do |(count, tms), index|
+      tms["TM #{(index + 1).to_s.rjust(2, '0')}"] = count
+    end
+  end
+
+  def max_tms
+    # 0x63 = 99
+    new_byte_string = (["\x63"] * PSE::Datum::TM_POCKET.length).join
+    write new_byte_string, PSE::Datum::TM_POCKET.offset
+    update_checksum
+  end
+
+  def hms
+    byte_string = read PSE::Datum::HM_POCKET.length, PSE::Datum::HM_POCKET.offset
+    byte_string.bytes.each_with_object({}).with_index do |(count, hms), index|
+      hms["HM #{(index + 1).to_s.rjust(2, '0')}"] = count
+    end
+  end
+
+  def max_hms
+    new_byte_string = (["\x01"] * PSE::Datum::HM_POCKET.length).join
+    write new_byte_string, PSE::Datum::HM_POCKET.offset
+    update_checksum
+  end
+
   def current_checksum
     read PSE::Datum::CHECKSUM.length, PSE::Datum::CHECKSUM.offset
   end
