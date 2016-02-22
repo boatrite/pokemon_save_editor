@@ -68,9 +68,36 @@ RSpec.describe Save do
   end
 
   describe '#rival_name=' do
-    it "todo write me" do
-      skip 'Write me'
-      save.rival_name = 'Write me'
+    it "sets the rival's name" do
+      expect {
+        save.rival_name = 'SILVER'
+      }.to change { save.rival_name }.from('Silver').to 'SILVER'
+    end
+
+    it 'updates the checksum' do
+      expect(save).to receive :update_checksum
+      save.rival_name = 'SILVER'
+    end
+
+    it 'raises an error if the name is blank' do
+      expect {
+        save.rival_name = ''
+      }.to raise_error 'Invalid name. Cannot be blank'
+      expect {
+        save.rival_name = '    '
+      }.to raise_error 'Invalid name. Cannot be blank'
+    end
+
+    it 'raises an error if the name is longer than 7 characters' do
+      expect {
+        save.rival_name = 'The Master'
+      }.to raise_error 'Invalid name. Cannot be longer than 7 characters'
+    end
+
+    it 'raises an error if an invalid character is given' do
+      expect {
+        save.rival_name = 'ジ'
+      }.to raise_error 'Invalid name. Invalid character: ジ'
     end
   end
 
