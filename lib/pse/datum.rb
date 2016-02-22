@@ -8,4 +8,6 @@ module PSE::Datum
   PLAYER_NAME = Offset.new 11, 0x200B
   RIVAL_NAME = Offset.new 11, 0x2021
   TRAINER_ID = Offset.new 2, 0x2009
+  TM_POCKET = Offset.new 50, 0x23E7
+  HM_POCKET = Offset.new 7, 0x2419
 end
