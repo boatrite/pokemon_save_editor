@@ -11,4 +11,5 @@ module PSE::Datum
   POCKET_TMS = Offset.new 50, 0x23E7
   RIVAL_NAME = Offset.new 11, 0x2021
   TRAINER_ID = Offset.new 2, 0x2009
+  POKEMON_TEAM = Offset.new 428, 0x2865
 end

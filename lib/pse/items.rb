@@ -1,5 +1,5 @@
 module PSE
-  HEX_TO_ITEMS = {
+  HEX_TO_ITEM = {
     0x01 => "Master Ball",
     0x02 => "Ultra Ball",
     0x03 => "BrightPowder",
@@ -251,5 +251,5 @@ module PSE
     0xF9 => "HM07"
   }
 
-  ITEMS_TO_HEX = HEX_TO_ITEMS.invert
+  ITEM_TO_HEX = HEX_TO_ITEM.invert
 end

@@ -283,6 +283,63 @@ RSpec.describe Save do
     end
   end
 
+  describe '#pokemon_team' do
+    it 'returns the current pokemon team' do
+      # TODO Give held item so that gets tested.
+      # TODO Confirm that the IVs are assigned to the correct stat.
+      expect(save.pokemon_team).to eq [
+        {
+          nickname: "SPIKE",
+          species: "Totodile",
+          held_item: nil,
+          moves: ["Scratch", "Leer", "Rage", nil],
+          experience: 659,
+
+          hp_evs: 830,
+          attack_evs: 730,
+          defense_evs: 754,
+          speed_evs: 982,
+          special_evs: 604,
+
+          hp_iv: 7,
+          attack_iv: 12,
+          defense_iv: 3,
+          speed_iv: 13,
+          special_iv: 1,
+
+          first_move_pp_ups: 0,
+          first_move_current_pp: 33,
+          second_move_pp_ups: 0,
+          second_move_current_pp: 30,
+          third_move_pp_ups: 0,
+          third_move_current_pp: 20,
+          fourth_move_pp_ups: 0,
+          fourth_move_current_pp: 0,
+
+          friendship: 96,
+
+          pokerus_strain: "0000",
+          pokerus_days_remaining: 0,
+
+          caught_time: "Morning",
+          caught_level: 5,
+          caught_location: "New Bark Town",
+
+          ot_trainer_id: 36426,
+          ot_name: "Amelia",
+          ot_gender: "Girl",
+
+          current_level: 10,
+        },
+        nil,
+        nil,
+        nil,
+        nil,
+        nil
+      ]
+    end
+  end
+
   describe '#current_checksum' do
     it 'returns the currently saved checksum for the primary copy of data' do
       expect(save.current_checksum).to eq "\x96\xFA".force_encoding(Encoding::ASCII_8BIT)

@@ -8,7 +8,7 @@ require "pse"
 
 save = PSE::Save.new 'spec/fixtures/Crystal.sav'
 
-new_items = {
+items = {
   'Full Restore' => 99, 'Rare Candy' => 99, 'Sacred Ash' => 99, 'Max Revive' => 99,
   'Gold Berry' => 99, 'Max Repel' => 99, 'Escape Rope' => 99,'Nugget' => 99,
   'PP Up' => 99, 'HP Up' => 99, 'Protein' => 99, 'Iron' => 99, 'Carbos' => 99, 'Calcium' => 99,
