@@ -10,7 +10,6 @@ Gem::Specification.new do |spec|
   spec.email         = ["zach@tenforwardconsulting.com"]
 
   spec.summary       = %q{Pokemon Save Editor}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
@@ -27,11 +26,11 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "awesome_print"
-  spec.add_development_dependency "bundler", "~> 1.11"
+  spec.add_development_dependency "bundler"
   spec.add_development_dependency "pry"
   spec.add_development_dependency "pry-editline"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
 
   spec.add_dependency "thor"
   spec.add_dependency "require_all"

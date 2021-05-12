@@ -99,7 +99,7 @@ class PSE::Save
 
   def gender=(new_gender)
     unless GENDERS.include? new_gender
-      raise ArgumentError.new "Invalid gender. Given #{new_gender.to_hex_s} but must be one of #{GENDERS.map { |g| g.to_hex_s }}"
+      raise ArgumentError.new "Invalid gender. Given #{new_gender.to_hex_s} but must be one of #{GENDERS.sort.map { |g| g.to_hex_s }}"
     end
     write new_gender, PSE::Datum::GENDER.offset
   end
@@ -110,7 +110,7 @@ class PSE::Save
 
   def palette=(new_palette)
     unless PALETTES.include? new_palette
-      raise ArgumentError.new "Invalid palette. Given #{new_palette.to_hex_s} but must be one of #{PALETTES.map { |p| p.to_hex_s }}"
+      raise ArgumentError.new "Invalid palette. Given #{new_palette.to_hex_s} but must be one of #{PALETTES.sort.map { |p| p.to_hex_s }}"
     end
     write new_palette, PSE::Datum::PALETTE.offset
     update_checksum
